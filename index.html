@@ -9,6 +9,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    try {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light' || savedTheme === 'dark') {
+        document.documentElement.dataset.theme = savedTheme;
+      }
+    } catch {}
+  </script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,6 +27,10 @@
         <a href="#about">About</a>
         <a href="#around">Around the web</a>
         <a class="nav-contact" href="https://www.linkedin.com/in/alexandros-sakkos/" target="_blank" rel="noreferrer">Say hello <span aria-hidden="true">↗</span></a>
+        <button class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.4A8.6 8.6 0 0 1 8.6 3.8a8.7 8.7 0 1 0 11.6 11.6Z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+        </button>
       </nav>
     </header>
 
@@ -59,7 +71,7 @@
           <a class="link-row" href="https://github.com/alexandros-sakkos" target="_blank" rel="noreferrer"><span><small>CODE & PROJECTS</small>GitHub</span><span class="arrow">↗</span></a>
           <a class="link-row" href="https://www.linkedin.com/in/alexandros-sakkos/" target="_blank" rel="noreferrer"><span><small>WORK & EXPERIENCE</small>LinkedIn</span><span class="arrow">↗</span></a>
         </div>
-        <div class="link-aside"><span>THREE PLACES<br>TO START</span></div>
+        <div class="link-aside"><span>TWO PLACES<br>TO START</span></div>
       </section>
 
       <section class="note">
@@ -74,5 +86,29 @@
       <a href="#top" class="back-top">BACK TO TOP ↑</a>
     </footer>
   </div>
+  <script>
+    const themeToggle = document.querySelector('.theme-toggle');
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+
+    function updateThemeButton(theme) {
+      const isDark = theme === 'dark';
+      themeToggle.setAttribute('aria-pressed', String(isDark));
+      themeToggle.setAttribute('aria-label', `Switch to ${isDark ? 'light' : 'dark'} mode`);
+      themeColor.setAttribute('content', isDark ? '#171916' : '#f4f2ec');
+    }
+
+    const initialTheme = document.documentElement.dataset.theme ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    updateThemeButton(initialTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const nextTheme = document.documentElement.dataset.theme === 'dark' ||
+        (!document.documentElement.dataset.theme && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        ? 'light' : 'dark';
+      document.documentElement.dataset.theme = nextTheme;
+      try { localStorage.setItem('theme', nextTheme); } catch {}
+      updateThemeButton(nextTheme);
+    });
+  </script>
 </body>
 </html>
